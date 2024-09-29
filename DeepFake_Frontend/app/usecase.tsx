@@ -13,17 +13,25 @@ const featureData = [
   { name: 'Fake News Detection', value: 70, icon: AlertTriangle },
 ];
 
-const FeatureCard = ({ title, description, icon: Icon }) => (
-  <Card className="w-full mb-4">
-    <CardContent className="flex items-center p-4">
-      <Icon className="h-8 w-8 mr-4 text-blue-500" />
-      <div>
-        <h3 className="font-semibold text-lg">{title}</h3>
-        <p className="text-m text-black-600">{description}</p>
-      </div>
-    </CardContent>
-  </Card>
-);
+interface FeatureCardProps {
+  title: string;
+  description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon: Icon }) => {
+  return (
+    <Card className="w-full mb-4">
+      <CardContent className="flex items-center p-4">
+        <Icon className="h-8 w-8 mr-4 text-blue-500" />
+        <div>
+          <h3 className="font-semibold text-lg">{title}</h3>
+          <p className="text-m text-gray-600">{description}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
 const FeatureChart = () => (
   <ResponsiveContainer width="100%" height={300}>

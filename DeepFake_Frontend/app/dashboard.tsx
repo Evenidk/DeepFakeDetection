@@ -16,14 +16,19 @@ const fakeData = [
   { name: 'Jun', video: 239, audio: 380, image: 250, text: 230 },
 ];
 
+
 const DeepfakeDetectionDashboard = () => {
-  const [activeTab, setActiveTab] = useState('video');
+  const [activeTab, setActiveTab] = useState<string>('video');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [detectionResult, setDetectionResult] = useState(null);
+  const [detectionResult, setDetectionResult] = useState<{
+    isDeepfake: boolean;
+    confidence: number;
+    details: string;
+  } | null>(null);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]; // Optional chaining to handle null case
     if (file) {
       setIsAnalyzing(true);
       setAnalysisProgress(0);
@@ -35,7 +40,7 @@ const DeepfakeDetectionDashboard = () => {
             setDetectionResult({
               isDeepfake: Math.random() > 0.5,
               confidence: Math.random() * 100,
-              details: "Analysis complete. Suspicious patterns detected in facial movements and audio synchronization."
+              details: 'Analysis complete. Suspicious patterns detected in facial movements and audio synchronization.',
             });
             return 100;
           }

@@ -16,11 +16,19 @@ import Contact from './contact';
 
 const DeepfakeDetectionWebsite = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const [uploadedFile, setUploadedFile] = useState(null);
-  const [detectionResult, setDetectionResult] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [analysisData, setAnalysisData] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [detectionResult, setDetectionResult] = useState<'authentic' | 'deepfake' | null>(null);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+
+  type AnalysisData = {
+    confidence: number;
+    type: string;
+    timeSeriesData: { time: number }[];
+    impactData: { name: string; value: number }[];
+  };
+  
   useEffect(() => {
     if (detectionResult) {
       // Simulate fetching analysis data
@@ -30,27 +38,30 @@ const DeepfakeDetectionWebsite = () => {
           type: ['Face Swap', 'Voice Cloning', 'Full Body Manipulation'][Math.floor(Math.random() * 3)],
           timeSeriesData: Array.from({ length: 10 }, (_, i) => ({
             time: i,
-            authenticity: Math.random() * 100,
+            authenticity: Math.random() * 100, // Generate random authenticity values for the chart
           })),
           impactData: [
-            { name: 'Social Media', value: 35 },
-            { name: 'News', value: 25 },
-            { name: 'Personal', value: 20 },
-            { name: 'Business', value: 20 },
-          ],
+            { name: 'Media', value: Math.random() * 100 },
+            { name: 'Politics', value: Math.random() * 100 },
+            { name: 'Finance', value: Math.random() * 100 },
+            { name: 'Education', value: Math.random() * 100 },
+          ], // Simulate different sectors affected by deepfakes
         });
       }, 1500);
     }
   }, [detectionResult]);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setUploadedFile(file);
-    setTimeout(() => {
-      setDetectionResult(Math.random() > 0.5 ? 'authentic' : 'deepfake');
-    }, 2000);
-  };
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+    if (file) {
+      setUploadedFile(file);
 
+      setTimeout(() => {
+        // Randomly set the detection result to either 'authentic' or 'deepfake'
+        setDetectionResult(Math.random() > 0.5 ? 'authentic' : 'deepfake');
+      }, 2000);
+    }
+  };
   const handleGoogleLogin = () => {
     setTimeout(() => {
       setIsLoggedIn(true);
@@ -156,6 +167,8 @@ const DeepfakeDetectionWebsite = () => {
 
 
   const renderAnalysis = () => (
+  
+    
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}

@@ -19,14 +19,20 @@ const ImageEnhancement = () => {
     const [saturation, setSaturation] = useState(100);
     const [imageUrl, setImageUrl] = useState("/api/placeholder/400/300");
   
-    const handleImageUpload = (event) => {
-      const file = event.target.files[0];
-      if (file) {
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        const file = files[0];
         const reader = new FileReader();
-        reader.onload = (e) => setImageUrl(e.target.result);
+        reader.onload = (e) => {
+          if (e.target && typeof e.target.result === 'string') {
+            setImageUrl(e.target.result);
+          }
+        };
         reader.readAsDataURL(file);
       }
     };
+    
   
     const imageStyle = {
       filter: `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`,
@@ -116,10 +122,20 @@ const ImageEnhancement = () => {
       </Card>
     );
   };
+  interface Analysis {
+    sentiment: string;
+    keywords: string[];
+    readability: string;
+  }
   
+  // Define the initial state, which can be null or an Analysis object
+ 
+  
+  // Simulated analysis
+
   const TextAnalysis = () => {
     const [text, setText] = useState('');
-    const [analysis, setAnalysis] = useState(null);
+    const [analysis, setAnalysis] = useState<Analysis | null>(null);
   
     const analyzeText = () => {
       // Simulated analysis
@@ -155,10 +171,15 @@ const ImageEnhancement = () => {
       </Card>
     );
   };
-
+  interface Trends {
+    trend: string;
+    confidence: string;
+    timeframe: string;
+    data: any;
+  }
 const TrendPrediction = () => {
   const [topic, setTopic] = useState('');
-  const [prediction, setPrediction] = useState(null);
+  const [prediction, setPrediction] = useState <Trends | null>(null);
 
   const predictTrend = () => {
     // Simulated prediction with graph data
@@ -215,12 +236,24 @@ const TrendPrediction = () => {
   );
 };
 
+interface AnalysisData {
+  factor: string;
+  score: number;
+}
+
+interface Result {
+  verdict: string;
+  confidence: string;
+  factCheckSources: string[];
+  analysisData: AnalysisData[];
+}
+
 const FakeNewsDetection = () => {
   const [newsText, setNewsText] = useState('');
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<Result | null>(null); // Allow result to be null initially
 
   const detectFakeNews = () => {
-    // Simulated detection with graph data
+    // Simulated detection with random data
     setResult({
       verdict: Math.random() > 0.5 ? 'Potentially False' : 'Likely True',
       confidence: `${Math.floor(Math.random() * 30) + 70}%`,
@@ -230,10 +263,9 @@ const FakeNewsDetection = () => {
         { factor: 'Content Consistency', score: Math.random() * 100 },
         { factor: 'Emotional Language', score: Math.random() * 100 },
         { factor: 'Fact Verification', score: Math.random() * 100 },
-      ]
+      ],
     });
   };
-
   return (
     <Card>
       <CardHeader>
@@ -273,13 +305,18 @@ const FakeNewsDetection = () => {
   );
 };
 
+interface Trend {
+  topic: string;
+  popularity: number;
+}
+
 const NewTrendsRelated = () => {
-  const [trends, setTrends] = useState([]);
+  const [trends, setTrends] = useState<Trend[]>([]); // Specify the state type as an array of Trend objects
 
   useEffect(() => {
     const fetchTrends = () => {
       // Simulated API call to fetch trending topics
-      const newTrends = [
+      const newTrends: Trend[] = [
         { topic: 'AI in Healthcare', popularity: Math.floor(Math.random() * 100) },
         { topic: 'Sustainable Energy', popularity: Math.floor(Math.random() * 100) },
         { topic: 'Space Exploration', popularity: Math.floor(Math.random() * 100) },
@@ -292,7 +329,7 @@ const NewTrendsRelated = () => {
     fetchTrends();
     const interval = setInterval(fetchTrends, 5000); // Update every 5 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Clear the interval when the component unmounts
   }, []);
 
   return (
