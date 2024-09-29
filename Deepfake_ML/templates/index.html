@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detection Web App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Roboto, sans-serif;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+        }
+              h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .navbar {
+            background-color: black;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .header-section {
+         /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            padding: 150px 0;
+color: white;
+            text-align: center;
+        }
+        .header-section h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+        }
+        .feature-section {
+            padding: 60px 0;
+        }
+        .feature-section h2 {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .footer {
+            background-color: black;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        #drag-area {
+            border: 2px dashed #6c757d;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        #drag-area.dragging {
+            background-color: #e2e6ea;
+        }
+
+
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">Deepfake Detector</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#upload">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="header-section" style="background-image: url('/static/bg2.jpeg'); ">
+        <h1>Deepfake Detection for Digital Integrity</h1>
+        <p>Detect fake images with high accuracy using our advanced AI model</p>
+        <a href="#upload" class="btn btn-primary">Get Started</a>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="feature-section bg-light">
+        <div class="container">
+            <h2>Features of Our Deepfake Detection System</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>High Accuracy</h4>
+                    <p>Our model is trained on the latest deepfake datasets to ensure high accuracy in detecting fake content.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>User-Friendly</h4>
+                    <p>Simply upload an image, and our system will tell you if it's real or fake with a confidence score.</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>Fast Processing</h4>
+                    <p>Our system processes images in real-time and returns results within seconds.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Section -->
+<div id="upload" class="container py-5">
+    <h2 class="text-center mb-4">Upload an Image</h2>
+    <div id="drag-area">
+        <p>Drag & drop an image here or click to select</p>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+    <div id="imagePreview" class="text-center mt-4" style="display: none;">
+        <img id="previewImg" src="" alt="Image Preview" style="max-width: 100%; height: auto; border: 2px solid #ddd; padding: 10px;">
+    </div>
+    <button id="submitBtn" class="btn btn-primary btn-block mt-3">Submit</button>
+
+    <!-- Progress bar -->
+    <div class="progress my-4" id="progressBar" style="display: none;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"></div>
+    </div>
+
+    <div id="result"></div>
+
+        <!-- Prediction History -->
+        <div id="history" class="mt-4">
+            <h4>Prediction History</h4>
+            <ul id="historyList" class="list-group"></ul>
+        </div>
+    </div>
+<!-- Video Upload Section -->
+<div id="upload-video" class="container py-5">
+    <h2 class="text-center mb-4">Upload a Video</h2>
+    <div id="drag-video-area">
+        <p>Drag & drop a video here or click to select</p>
+        <input type="file" id="videoInput" accept="video/*" hidden>
+    </div>
+    <div id="videoPreview" class="text-center mt-4" style="display: none;">
+        <video id="previewVideo" controls style="max-width: 100%; height: auto; border: 2px solid #ddd; padding: 10px;"></video>
+    </div>
+    <button id="submitVideoBtn" class="btn btn-primary btn-block mt-3">Submit Video</button>
+
+    <!-- Progress bar -->
+    <div class="progress my-4" id="videoProgressBar" style="display: none;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"></div>
+    </div>
+
+    <div id="videoResult"></div>
+
+    <!-- Prediction History -->
+    <div id="videoHistory" class="mt-4">
+        <h4>Prediction History</h4>
+        <ul id="videoHistoryList" class="list-group"></ul>
+    </div>
+</div>
+
+    <!-- About Section -->
+    <div id="about" class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center">About This Project</h2>
+            <p class="text-center">
+                This project aims to combat the growing problem of deepfake media, which can spread misinformation or harm reputations. Our advanced deep learning models analyze images for telltale signs of manipulation, such as unnatural texture inconsistencies and facial movements. Stay ahead of the curve in detecting digital forgeries with our user-friendly platform.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Deepfake Detection. All Rights Reserved.</p>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- JS for drag-and-drop file upload -->
+    <script>
+        const dragArea = document.getElementById('drag-area');
+        const fileInput = document.getElementById('fileInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.getElementById('progressBar');
+        const resultDiv = document.getElementById('result');
+        const historyList = document.getElementById('historyList');
+        const imagePreview = document.getElementById('imagePreview');
+const previewImg = document.getElementById('previewImg');
+
+
+        let selectedFile = null;
+
+        dragArea.addEventListener('click', () => fileInput.click());
+        dragArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dragArea.classList.add('dragging');
+        });
+        dragArea.addEventListener('dragleave', () => dragArea.classList.remove('dragging'));
+        dragArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dragArea.classList.remove('dragging');
+            selectedFile = event.dataTransfer.files[0];
+            fileInput.files = event.dataTransfer.files;
+             showImagePreview(selectedFile);
+        });
+        // Function to show image preview
+function showImagePreview(file) {
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            previewImg.src = event.target.result;
+            imagePreview.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+        fileInput.addEventListener('change', (event) => {
+            selectedFile = event.target.files[0];
+             showImagePreview(selectedFile);
+        });
+
+        submitBtn.addEventListener('click', async () => {
+            if (!selectedFile) {
+                alert('Please upload an image first!');
+                return;
+            }
+
+            progressBar.style.display = 'block';
+            const progressBarElement = document.querySelector('.progress-bar');
+            progressBarElement.style.width = '50%';
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.text();
+
+                progressBarElement.style.width = '100%';
+                resultDiv.innerHTML = `<p class="text-success">${result}</p>`;
+
+                const historyItem = document.createElement('li');
+                historyItem.classList.add('list-group-item');
+                historyItem.textContent = result;
+                historyList.appendChild(historyItem);
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="text-danger">An error occurred. Please try again.</p>`;
+            }
+
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+                progressBarElement.style.width = '0%';
+            }, 1000);
+        });
+
+        const dragVideoArea = document.getElementById('drag-video-area');
+const videoInput = document.getElementById('videoInput');
+const submitVideoBtn = document.getElementById('submitVideoBtn');
+const videoProgressBar = document.getElementById('videoProgressBar');
+const videoResultDiv = document.getElementById('videoResult');
+const videoHistoryList = document.getElementById('videoHistoryList');
+const videoPreview = document.getElementById('videoPreview');
+const previewVideo = document.getElementById('previewVideo');
+
+let selectedVideoFile = null;
+
+// Drag-and-drop or click to select the file
+dragVideoArea.addEventListener('click', () => videoInput.click());
+dragVideoArea.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    dragVideoArea.classList.add('dragging');
+});
+dragVideoArea.addEventListener('dragleave', () => dragVideoArea.classList.remove('dragging'));
+dragVideoArea.addEventListener('drop', (event) => {
+    event.preventDefault();
+    dragVideoArea.classList.remove('dragging');
+    selectedVideoFile = event.dataTransfer.files[0];
+    videoInput.files = event.dataTransfer.files;
+    showVideoPreview(selectedVideoFile);
+});
+
+// Video preview when file is selected
+videoInput.addEventListener('change', (event) => {
+    selectedVideoFile = event.target.files[0];
+    showVideoPreview(selectedVideoFile);
+});
+
+// Function to show video preview
+function showVideoPreview(file) {
+    if (file) {
+        const url = URL.createObjectURL(file);
+        previewVideo.src = url;
+        videoPreview.style.display = 'block';
+    }
+}
+
+// Submit video for processing
+submitVideoBtn.addEventListener('click', async () => {
+    if (!selectedVideoFile) {
+        alert('Please upload a video first!');
+        return;
+    }
+
+    videoProgressBar.style.display = 'block';
+    const progressBarElement = document.querySelector('.progress-bar');
+    progressBarElement.style.width = '50%';
+
+    const formData = new FormData();
+    formData.append('video', selectedVideoFile);
+
+    try {
+        const response = await fetch('/predict_video', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.text();
+
+        progressBarElement.style.width = '100%';
+        videoResultDiv.innerHTML = `<p class="text-success">${result}</p>`;
+
+        const historyItem = document.createElement('li');
+        historyItem.classList.add('list-group-item');
+        historyItem.textContent = result;
+        videoHistoryList.appendChild(historyItem);
+    } catch (error) {
+        videoResultDiv.innerHTML = `<p class="text-danger">An error occurred. Please try again.</p>`;
+    }
+
+    setTimeout(() => {
+        videoProgressBar.style.display = 'none';
+        progressBarElement.style.width = '0%';
+    }, 1000);
+});
+
+    </script>
+
+</body>
+</html>

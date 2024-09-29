@@ -1,0 +1,130 @@
+import React, { useState } from 'react';
+import { Camera, Shield, AlertTriangle, CheckCircle, Upload } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+const DeepfakeDetectionWebsite = () => {
+  const [activeSection, setActiveSection] = useState('home');
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [detectionResult, setDetectionResult] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setUploadedFile(file);
+    // Simulating detection process
+    setTimeout(() => {
+      setDetectionResult(Math.random() > 0.5 ? 'authentic' : 'deepfake');
+    }, 2000);
+  };
+
+  const renderHome = () => (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-blue-100 to-white text-center p-4">
+      <h1 className="text-4xl font-bold mb-4">Deepfake Detection for Digital Integrity</h1>
+      <p className="text-xl mb-8">Protect your digital content with our state-of-the-art deepfake detection technology</p>
+      <button
+        className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors"
+        onClick={() => setActiveSection('upload')}
+      >
+        Start Detection
+      </button>
+    </div>
+  );
+
+  const renderUpload = () => (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h2 className="text-3xl font-bold mb-6">Upload Media for Analysis</h2>
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <input
+          type="file"
+          accept="image/*,video/*"
+          onChange={handleFileUpload}
+          className="hidden"
+          id="fileInput"
+        />
+        <label
+          htmlFor="fileInput"
+          className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-colors"
+        >
+          <Upload size={48} className="text-gray-400 mb-4" />
+          <span className="text-lg font-semibold">Click to upload or drag and drop</span>
+          <span className="text-sm text-gray-500">Supported formats: JPG, PNG, MP4</span>
+        </label>
+        {uploadedFile && (
+          <div className="mt-4">
+            <p className="text-sm font-semibold">File uploaded: {uploadedFile.name}</p>
+            {detectionResult === null ? (
+              <p className="text-sm text-gray-500">Analyzing...</p>
+            ) : (
+              <Alert className={detectionResult === 'authentic' ? 'bg-green-100' : 'bg-red-100'}>
+                <AlertTitle className="flex items-center">
+                  {detectionResult === 'authentic' ? (
+                    <CheckCircle className="mr-2 text-green-500" />
+                  ) : (
+                    <AlertTriangle className="mr-2 text-red-500" />
+                  )}
+                  {detectionResult === 'authentic' ? 'Authentic Content' : 'Deepfake Detected'}
+                </AlertTitle>
+                <AlertDescription>
+                  {detectionResult === 'authentic'
+                    ? 'The uploaded content appears to be authentic.'
+                    : 'The uploaded content may be a deepfake. Please verify its source.'}
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  const Navbar = () => (
+    <nav className="bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between h-16">
+          <div className="flex">
+            <div className="flex-shrink-0 flex items-center">
+              <Shield className="h-8 w-8 text-blue-500" />
+              <span className="ml-2 text-xl font-bold">DeepGuard</span>
+            </div>
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <button
+                onClick={() => setActiveSection('home')}
+                className={`${
+                  activeSection === 'home'
+                    ? 'border-blue-500 text-gray-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+              >
+                Home
+              </button>
+              <button
+                onClick={() => setActiveSection('upload')}
+                className={`${
+                  activeSection === 'upload'
+                    ? 'border-blue-500 text-gray-900'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+              >
+                Upload
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        {activeSection === 'home' && renderHome()}
+        {activeSection === 'upload' && renderUpload()}
+      </main>
+      <footer className="bg-gray-800 text-white text-center py-4">
+        <p>&copy; 2024 DeepGuard. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+};
+
+export default DeepfakeDetectionWebsite;
