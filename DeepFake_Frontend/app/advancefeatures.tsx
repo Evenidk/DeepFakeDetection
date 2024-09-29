@@ -19,7 +19,7 @@ const ImageEnhancement = () => {
     const [saturation, setSaturation] = useState(100);
     const [imageUrl, setImageUrl] = useState("/api/placeholder/400/300");
   
-    const handleImageUpload = (event) => {
+    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
