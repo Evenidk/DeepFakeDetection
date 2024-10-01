@@ -54,8 +54,8 @@ const Contact = () => {
       <Head>
         <title>Contact Us - Your Company</title>
       </Head>
-      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 min-h-screen">
-        <div className="max-w-md w-full space-y-8">
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 min-h-screen bg-gradient-to-r from-indigo-500 to-purple-600">
+        <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
               Contact Us
@@ -78,7 +78,7 @@ const Contact = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-shadow duration-300 shadow-sm hover:shadow-md"
                   placeholder="Your Name"
                 />
               </div>
@@ -94,7 +94,7 @@ const Contact = () => {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-shadow duration-300 shadow-sm hover:shadow-md"
                   placeholder="Email Address"
                 />
               </div>
@@ -110,7 +110,7 @@ const Contact = () => {
                   required
                   value={formData.subject}
                   onChange={handleChange}
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-shadow duration-300 shadow-sm hover:shadow-md"
                   placeholder="Subject"
                 />
               </div>
@@ -126,7 +126,7 @@ const Contact = () => {
                   required
                   value={formData.message}
                   onChange={handleChange}
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm transition-shadow duration-300 shadow-sm hover:shadow-md"
                   placeholder="Your Message"
                 ></textarea>
               </div>
@@ -145,9 +145,11 @@ const Contact = () => {
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
-                  status === "sending" ? "bg-gray-400" : "bg-indigo-600 hover:bg-indigo-700"
-                } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white transition-all duration-300 ease-in-out ${
+                  status === "sending"
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 shadow-lg hover:shadow-2xl"
+                }`}
               >
                 {status === "sending" ? "Sending..." : "Send Message"}
               </button>

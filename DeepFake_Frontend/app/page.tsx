@@ -2,7 +2,7 @@ import Image from "next/image";
 import DeepfakeDetectionWebsite from "./detect";
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { Switch } from "@/components/ui/switch";
 export default function Home() {
   return (
     <>

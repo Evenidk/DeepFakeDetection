@@ -1,12 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Camera, Shield, AlertTriangle, CheckCircle, Upload, Mail, Star, LogIn, BarChart2 , FileVideo, FileImage, FileAudio, FileText, AlertCircle} from 'lucide-react';
+import { Camera, Shield, AlertTriangle, CheckCircle, Upload, Mail, Star, LogIn, BarChart2 , FileVideo, FileImage, FileAudio, FileText, AlertCircle, Menu, X} from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import AIMediaAnalysis from './usecase';
 import DeepfakeDetectionDashboard from './dashboard';
@@ -18,14 +17,14 @@ const DeepfakeDetectionWebsite = () => {
   const [activeSection, setActiveSection] = useState('home');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [detectionResult, setDetectionResult] = useState<'authentic' | 'deepfake' | null>(null);
-
+  const [darkMode, setDarkMode] = useState(false); // Dark mode state
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
 
   type AnalysisData = {
     confidence: number;
     type: string;
-    timeSeriesData: { time: number }[];
+    timeSeriesData: { time: number; authenticity: number }[];
     impactData: { name: string; value: number }[];
   };
   
@@ -108,7 +107,7 @@ const DeepfakeDetectionWebsite = () => {
       exit={{ opacity: 0 }}
       className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
     >
-      <h2 className="text-3xl font-bold mb-6">Upload Media for Analysis</h2>
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">Upload Media for Analysis</h2>
       <motion.div 
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
@@ -167,30 +166,32 @@ const DeepfakeDetectionWebsite = () => {
 
 
   const renderAnalysis = () => (
-  
-    
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
     >
-      <h2 className="text-3xl font-bold mb-6">Deepfake Detection Analysis</h2>
+      <h2 className="text-3xl font-bold mb-6 text-gray-800">Deepfake Detection Analysis</h2>
       {analysisData ? (
         <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card>
-            <CardHeader>Detection Confidence</CardHeader>
+            <CardHeader>
+              <CardTitle>Detection Confidence</CardTitle>
+            </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-center">
+              <div className="text-4xl font-bold text-center text-gray-800">
                 {analysisData.confidence.toFixed(2)}%
               </div>
-              <div className="text-center mt-2">
+              <div className="text-center mt-2 text-gray-600">
                 Detected Type: {analysisData.type}
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardHeader>Authenticity Over Time</CardHeader>
+            <CardHeader>
+              <CardTitle>Authenticity Over Time</CardTitle>
+            </CardHeader>
             <CardContent className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={analysisData.timeSeriesData}>
@@ -204,72 +205,40 @@ const DeepfakeDetectionWebsite = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-          <Card className="md:col-span-2">
-            <CardHeader>Impact of Deepfakes by Sector</CardHeader>
-            <CardContent className="h-80">
+          <Card>
+            <CardHeader>
+              <CardTitle>Impact Analysis</CardTitle>
+            </CardHeader>
+            <CardContent className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    data={analysisData.impactData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label
-                  >
+                  <Pie data={analysisData.impactData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} fill="#82ca9d" label>
                     {analysisData.impactData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042'][index % 4]} />
+                      <Cell key={`cell-${index}`} fill={`#${Math.floor(Math.random()*16777215).toString(16)}`} />
                     ))}
                   </Pie>
-                  <Tooltip />
-                  <Legend />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        
         </div>
       ) : (
-        <p>No analysis data available. Please upload and analyze content first.</p>
+        <p className="text-gray-600">No analysis available.</p>
       )}
-   
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="mt-8 bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-200"
+        onClick={() => setActiveSection('home')}
+      >
+        Return to Home
+      </motion.button>
     </motion.div>
   );
 
+
   // ... (other render functions remain the same)
-  const renderContact = () => (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h2 className="text-3xl font-bold mb-6">Contact Us</h2>
-      <Card className="w-full max-w-md">
-        <CardContent className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Mail className="text-blue-500" />
-            <span>support@deepguard.com</span>
-          </div>
-          <form className="space-y-4">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full p-2 border border-gray-300 rounded"
-            />
-            <textarea
-              placeholder="Your Message"
-              className="w-full p-2 border border-gray-300 rounded h-32"
-            ></textarea>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
-              Send Message
-            </button>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
+ 
 
   const renderFeedback = () => (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
@@ -393,6 +362,7 @@ const DeepfakeDetectionWebsite = () => {
   );
 
   return (
+    
     <div className="min-h-screen flex flex-col">
     
       <Navbar />
