@@ -70,14 +70,14 @@ DeepGuard is an advanced media analysis platform built using machine learning al
     Run the Angular frontend:
 
     ```bash
-    ng serve
+    npm run dev
     ```
 
 4. **Access the Application:**
     Open your browser and navigate to:
     
     ```
-    http://localhost:4200
+    http://localhost:3000
     ```
 
 ## Usage
