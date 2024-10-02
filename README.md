@@ -67,7 +67,7 @@ DeepGuard is an advanced media analysis platform built using machine learning al
     npm install
     ```
 
-    Run the Angular frontend:
+    Run the NextJs frontend:
 
     ```bash
     npm run dev
