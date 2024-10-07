@@ -11,6 +11,7 @@ import AIMediaAnalysis from './usecase';
 import DeepfakeDetectionDashboard from './dashboard';
 import AIMediaAnalysisFeatures from './advancefeatures';
 import Contact from './contact';
+import DeepfakeMonitorDashboard from './monitor';
 
 
 const DeepfakeDetectionWebsite = () => {
@@ -324,7 +325,7 @@ const DeepfakeDetectionWebsite = () => {
               <span className="ml-2 text-xl font-bold">DeepGuard</span>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {['home', 'upload', 'analysis', 'contact', 'Dashboard', 'Media Analysis'].map((section) => (
+              {['home', 'upload', 'analysis', 'contact', 'Dashboard', 'Media Analysis', "Model Monitoring"].map((section) => (
                 <motion.button
                   key={section}
                   whileHover={{ scale: 1.05 }}
@@ -380,6 +381,7 @@ const DeepfakeDetectionWebsite = () => {
           {activeSection === 'contact' && <Contact/>}
           {activeSection === 'Dashboard' && <DeepfakeDetectionDashboard/>}
           {activeSection === 'Media Analysis' && <AIMediaAnalysisFeatures/>}
+          {activeSection=== 'Model Monitoring' && <DeepfakeMonitorDashboard/>}
           {activeSection === 'login' && renderLogin()}
       
         </motion.main>
