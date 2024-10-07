@@ -1,12 +1,11 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Upload, FileVideo, FileImage, FileAudio, FileText, AlertCircle } from 'lucide-react';
-import { Switch } from "@/components/ui/switch";  // Importing switch for dark mode toggle
+import { Upload, FileVideo, FileImage, FileAudio, FileText } from 'lucide-react';
 
 const fakeData = [
   { name: 'Jan', video: 400, audio: 240, image: 320, text: 180 },
@@ -16,7 +15,6 @@ const fakeData = [
 ];
 
 const DeepfakeDetectionDashboard = () => {
-  const [darkMode, setDarkMode] = useState(false); // Dark mode state
   const [activeTab, setActiveTab] = useState<string>('video');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState(0);
@@ -50,16 +48,11 @@ const DeepfakeDetectionDashboard = () => {
   };
 
   return (
-    <div className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'} p-4 max-w-6xl mx-auto min-h-screen`}>
+    <div className="bg-gray-100 text-black p-4 max-w-6xl mx-auto min-h-screen">
       <div className="flex justify-between items-center">
         <h1 className="text-4xl font-bold mb-6">Deepfake Detection Dashboard</h1>
-        {/* Dark Mode Toggle */}
-        <div className="flex items-center">
-          <span>Dark Mode</span>
-          <Switch checked={darkMode} onCheckedChange={() => setDarkMode(!darkMode)} className="ml-2"/>
-        </div>
       </div>
-      
+
       <Tabs defaultValue="video" className="mb-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="video" onClick={() => setActiveTab('video')}>Video</TabsTrigger>
@@ -67,7 +60,7 @@ const DeepfakeDetectionDashboard = () => {
           <TabsTrigger value="image" onClick={() => setActiveTab('image')}>Image</TabsTrigger>
           <TabsTrigger value="text" onClick={() => setActiveTab('text')}>Text</TabsTrigger>
         </TabsList>
-        
+
         {['video', 'audio', 'image', 'text'].map((type) => (
           <TabsContent key={type} value={type}>
             <Card>
@@ -77,7 +70,7 @@ const DeepfakeDetectionDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-center w-full mb-4">
-                  <label htmlFor={`dropzone-file-${type}`} className={`flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer ${darkMode ? 'bg-gray-700' : 'bg-gray-50'} hover:bg-gray-100`}>
+                  <label htmlFor={`dropzone-file-${type}`} className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <Upload className="w-10 h-10 mb-3 text-gray-400" />
                       <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click to upload</span> or drag and drop</p>
@@ -97,7 +90,6 @@ const DeepfakeDetectionDashboard = () => {
                     <h3 className="font-bold mb-2">{detectionResult.isDeepfake ? 'Potential Deepfake Detected' : 'No Deepfake Detected'}</h3>
                     <p>Confidence: {detectionResult.confidence.toFixed(2)}%</p>
                     <p>{detectionResult.details}</p>
-                    {/* Download Report Button */}
                     <Button className="mt-2">Download Report</Button>
                   </div>
                 )}
