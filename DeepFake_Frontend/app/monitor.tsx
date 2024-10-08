@@ -90,51 +90,23 @@ const generateComparisonData = () => (
   }))
 );
 
-const generateTrendData = () => (
-  Array.from({ length: 10 }, (_, i) => ({
-    timestamp: `T-${10 - i}`,
-    trendValue: 0.5 // Initialize with neutral trend
-  }))
-);
-
 const generatePerformanceMetrics = () => ({
   accuracy: "0.90", // Initialize with fixed value
   precision: "0.85",
   recall: "0.88",
-  f1Score: "0.86",
-  confusionMatrix: {
-    truePositive: 50,
-    falsePositive: 10,
-    trueNegative: 45,
-    falseNegative: 5
-  }
+  f1Score: "0.86"
 });
 
-// Simulated Recommendations based on trends
-const getRecommendations = (trendData) => {
-  // Simple logic: if trendValue > 0.7 in more than 3 trends, recommend retraining
-  const highTrends = trendData.filter(trend => trend.trendValue > 0.7);
-  if (highTrends.length > 3) {
-    return "High trend activity detected. It's recommended to consider retraining the model to maintain accuracy.";
-  }
+// Simulated Recommendations
+const getRecommendations = () => {
   return "Current trends are stable. Continue monitoring.";
 };
-
-// Simulated Anomaly Detection Data
-const generateAnomalyData = () => (
-  Array.from({ length: 20 }, (_, i) => ({
-    timestamp: new Date(Date.now() - (20 - i) * 60000).toISOString(),
-    value: 0 // Initialize without anomalies
-  }))
-);
 
 const DeepfakeMonitorDashboard = () => {
   // Initialize state with consistent data
   const [timeSeriesData, setTimeSeriesData] = useState(generateInitialTimeSeriesData());
   const [modelDriftData, setModelDriftData] = useState(generateComparisonData());
-  const [trendData, setTrendData] = useState(generateTrendData());
   const [performanceMetrics, setPerformanceMetrics] = useState(generatePerformanceMetrics());
-  const [anomalyData, setAnomalyData] = useState(generateAnomalyData());
   const [alert, setAlert] = useState(false);
   const [retrainTime, setRetrainTime] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
@@ -172,26 +144,8 @@ const DeepfakeMonitorDashboard = () => {
         return newData;
       });
 
-      // Update Trend Data
-      setTrendData(prevData => {
-        const updatedTrend = prevData.map((item, index) => ({
-          timestamp: `T-${10 - index}`,
-          trendValue: Math.random()
-        }));
-        return updatedTrend;
-      });
-
       // Update Performance Metrics
       setPerformanceMetrics(generatePerformanceMetrics());
-
-      // Update Anomaly Data
-      setAnomalyData(prevData => {
-        const newDataPoint = {
-          timestamp: new Date().toISOString(),
-          value: Math.random() > 0.95 ? 1 : 0 // 5% chance of anomaly
-        };
-        return [...prevData.slice(1), newDataPoint];
-      });
 
       // Check for significant drift
       const driftThreshold = 0.3;
@@ -237,8 +191,6 @@ const DeepfakeMonitorDashboard = () => {
     // Implement actual feedback handling logic here
   };
 
-  const recommendations = getRecommendations(trendData);
-
   // Prevent hydration mismatch by only rendering after mount
   if (!hasMounted) {
     return null;
@@ -282,231 +234,78 @@ const DeepfakeMonitorDashboard = () => {
           </Alert>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Summary Card */}
-          <Card className="col-span-1">
-            <CardHeader>
-              <CardTitle>Model Health</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Current Drift:</strong> {alert ? 'High' : 'Normal'}</p>
-              <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Retrain By:</strong> {retrainTime ? retrainTime.toLocaleTimeString() : 'N/A'}</p>
-              {!alert && (
-                <Button variant="outline" className="mt-4" onClick={handleAcknowledgeAlert}>
-                  Acknowledge Alert
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Trend Prediction Chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Real-time Time Series Data */}
           <Card className="col-span-2">
             <CardHeader>
-              <CardTitle>Trend Prediction</CardTitle>
+              <CardTitle>Real-time Data Drift</CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={trendData}>
+                <LineChart data={timeSeriesData.groundTruth}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="timestamp" stroke="#8884d8" />
                   <YAxis stroke="#8884d8" />
                   <Tooltip />
                   <Legend />
-                  <Line type="monotone" dataKey="trendValue" stroke="#ff7300" name="Trend Value" />
-                </LineChart>
-              </ResponsiveContainer>
-              <p className="mt-4 text-gray-700 dark:text-gray-300">{recommendations}</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Input Data vs Ground Truth */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Real-Time Data Drift</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="timestamp" stroke="#8884d8" />
-                  <YAxis stroke="#8884d8" />
-                  <Tooltip />
-                  <Legend />
-                  <Line dataKey="value" type="monotone" data={timeSeriesData.groundTruth} stroke="#82ca9d" name="Ground Truth" />
-                  <Line dataKey="value" type="monotone" data={timeSeriesData.inputData} stroke="#8884d8" name="Input Data" />
-                  <ReferenceLine y={0.5} stroke="red" strokeDasharray="3 3" label="Threshold" />
+                  <Line type="monotone" dataKey="value" stroke="#82ca9d" name="Ground Truth" />
+                  <Line type="monotone" dataKey="value" data={timeSeriesData.inputData} stroke="#8884d8" name="Input Data" />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          {/* Model Drift Comparison */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Model Drift Comparison</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={modelDriftData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="category" stroke="#8884d8" />
-                  <YAxis stroke="#8884d8" />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="current" fill="#8884d8" name="Current" />
-                  <Bar dataKey="previous" fill="#82ca9d" name="Previous" />
-                  <Bar dataKey="groundTruth" fill="#ffc658" name="Ground Truth" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Model Drift Chart */}
+          <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Model Drift</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={modelDriftData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="category" label={{ value: 'Categories', position: 'insideBottom', offset: -5 }} />
+                <YAxis domain={['auto', 'auto']} label={{ value: 'Drift', angle: -90, position: 'insideLeft' }} />
+                <Tooltip />
+                <Legend />
+                <ReferenceLine y={0.5} stroke="green" label="Ground Truth" />
+                <Line type="monotone" dataKey="current" stroke="#8884d8" activeDot={{ r: 8 }} />
+                <Line type="monotone" dataKey="previous" stroke="#82ca9d" />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Performance Metrics */}
           <Card>
             <CardHeader>
               <CardTitle>Performance Metrics</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Accuracy:</strong> {performanceMetrics.accuracy}</p>
-              <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Precision:</strong> {performanceMetrics.precision}</p>
-              <p className="text-lg text-gray-700 dark:text-gray-300"><strong>Recall:</strong> {performanceMetrics.recall}</p>
-              <p className="text-lg text-gray-700 dark:text-gray-300"><strong>F1 Score:</strong> {performanceMetrics.f1Score}</p>
+              <ul className="list-disc pl-5">
+                <li>Accuracy: {performanceMetrics.accuracy}</li>
+                <li>Precision: {performanceMetrics.precision}</li>
+                <li>Recall: {performanceMetrics.recall}</li>
+                <li>F1 Score: {performanceMetrics.f1Score}</li>
+              </ul>
             </CardContent>
           </Card>
 
-          {/* Confusion Matrix */}
+          {/* Feedback Form */}
           <Card className="col-span-2">
             <CardHeader>
-              <CardTitle>Confusion Matrix</CardTitle>
+              <CardTitle>Submit Feedback</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex justify-center items-center overflow-x-auto">
-                <table className="min-w-full bg-white dark:bg-gray-800">
-                  <thead>
-                    <tr>
-                      <th className="py-2 px-4 border"> </th>
-                      <th className="py-2 px-4 border">Predicted Positive</th>
-                      <th className="py-2 px-4 border">Predicted Negative</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="py-2 px-4 border">Actual Positive</td>
-                      <td className="py-2 px-4 border">{performanceMetrics.confusionMatrix.truePositive}</td>
-                      <td className="py-2 px-4 border">{performanceMetrics.confusionMatrix.falseNegative}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 px-4 border">Actual Negative</td>
-                      <td className="py-2 px-4 border">{performanceMetrics.confusionMatrix.falsePositive}</td>
-                      <td className="py-2 px-4 border">{performanceMetrics.confusionMatrix.trueNegative}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Model Explainability */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Model Explainability</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300">SHAP or LIME explanations would be visualized here.</p>
-              {/* Placeholder for SHAP/LIME Chart */}
-              <div className="h-64 bg-gray-200 dark:bg-gray-600 flex justify-center items-center mt-4 rounded">
-                <p className="text-gray-500 dark:text-gray-400">Explainability Chart Placeholder</p>
-              </div>
-              <Button variant="primary" className="mt-4" onClick={() => window.alert('Explainability Feature Coming Soon!')}>
-                Generate Explanation
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Anomaly Detection */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Anomaly Detection</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={anomalyData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="timestamp" stroke="#8884d8" />
-                  <YAxis stroke="#8884d8" />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="value" stroke="#ff7300" name="Anomaly" />
-                </LineChart>
-              </ResponsiveContainer>
-              <Button variant="primary" className="mt-4" onClick={() => window.alert('Anomaly Detection Feature Coming Soon!')}>
-                Analyze Anomalies
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Recent Trends & Recommendations */}
-          <Card className="lg:col-span-3">
-            <CardHeader>
-              <CardTitle>Recent Trends & Recommendations</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-gray-700 dark:text-gray-300">{recommendations}</p>
-              <Button variant="primary" onClick={handleRetrainNow}>
-                Retrain Model Now
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* User Feedback Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>User Feedback</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300">Provide feedback on model predictions:</p>
               <textarea
-                className="w-full mt-2 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-600 dark:text-gray-200 dark:border-gray-500"
-                rows="4"
                 value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                placeholder="Enter your feedback here..."
-              ></textarea>
-              <Button variant="secondary" className="mt-4" onClick={handleFeedbackSubmit}>
-                Submit Feedback
+                onChange={e => setFeedback(e.target.value)}
+                className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-600 dark:text-gray-200"
+                placeholder="Enter your feedback..."
+              />
+              <Button variant="primary" onClick={handleFeedbackSubmit} className="mt-4">
+                Submit
               </Button>
-            </CardContent>
-          </Card>
-
-          {/* Anomaly Detection Insights */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Anomaly Detection Insights</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-lg text-gray-700 dark:text-gray-300">Insights based on detected anomalies:</p>
-              <ul className="list-disc list-inside mt-2 text-gray-700 dark:text-gray-300">
-                {anomalyData.some(data => data.value === 1) ? (
-                  <>
-                    <li>Anomaly detected at {anomalyData.find(data => data.value === 1).timestamp}.</li>
-                    <li>Investigate potential issues related to the detected anomaly.</li>
-                  </>
-                ) : (
-                  <>
-                    <li>No significant anomalies detected in the last interval.</li>
-                    <li>System running within normal parameters.</li>
-                    <li>Continue monitoring for any unusual activities.</li>
-                  </>
-                )}
-              </ul>
             </CardContent>
           </Card>
         </div>
