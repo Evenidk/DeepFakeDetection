@@ -4,7 +4,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Upload, FileVideo, FileImage, FileAudio, FileText } from 'lucide-react';
+import { Upload, FileVideo, FileImage, FileAudio, FileText, AlertCircle } from 'lucide-react';
+import { Switch } from "@/components/ui/switch";  // Importing switch for dark mode toggle
+import DeepGuardDashboard from './dashui';
 
 // Import the RealTimeChart component
 import RealTimeChart from "../components/RealTimeChart"; 
@@ -90,6 +92,7 @@ const DeepfakeDetectionDashboard = () => {
                 )}
               </CardContent>
             </Card>
+            <DeepGuardDashboard/>
           </TabsContent>
         ))}
       </Tabs>
