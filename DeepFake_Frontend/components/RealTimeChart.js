@@ -47,7 +47,7 @@ const RealTimeChart = () => {
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Real-Time Data Trends (NewsAPI & Shodan)</h2>
-
+     
       {/* Displaying the NewsAPI Data */}
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={newsData}>
@@ -58,6 +58,9 @@ const RealTimeChart = () => {
           <Line type="monotone" dataKey="mentions" stroke="#8884d8" name="News Mentions" />
         </LineChart>
       </ResponsiveContainer>
+      <p>The graph displays trends in the number of mentions of "deepfake" in news articles fetched in real-time.
+The X-axis labels show the headlines (or publication dates) of the articles, while the Y-axis reflects the number of mentions (simulated).
+This makes it easy to see how "deepfake" is trending in the news over time or across different articles.</p>
 
       {/* <h3 className="text-xl font-bold mt-6">Cybersecurity Threats (Shodan API)</h3> */}
 
