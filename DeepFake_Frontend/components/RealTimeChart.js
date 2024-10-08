@@ -11,7 +11,7 @@ const RealTimeChart = () => {
   const fetchNewsData = async () => {
     try {
       const response = await axios.get(
-        `https://newsapi.org/v2/everything?q=deepfake&sortBy=publishedAt&apiKey=46108e403db24735a81d5a7654b31c3f`
+        `https://newsapi.org/v2/everything?q=deepfake&sortBy=publishedAt&apiKey=ade509f47fd54222955b7cd2b1c04daf`
       );
       const articles = response.data.articles.map((article, index) => ({
         name: article.title, // Display article title on X-axis
