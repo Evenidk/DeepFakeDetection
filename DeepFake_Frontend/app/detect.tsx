@@ -36,9 +36,11 @@ import {
 } from "recharts";
 import RegisterForm from "@/components/RegisterForm";
 import useTheme from "./hooks/useTheme";  // Import the custom theme hook
+import UploadAndAnalysis from "./UploadAndAnalysis";
+import ProblemStatementPage from "./problemstatement";
 
 const DeepfakeDetectionWebsite = () => {
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("Problem Statement");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [detectionResult, setDetectionResult] = useState<"authentic" | "deepfake" | null>(null);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
@@ -116,122 +118,122 @@ const DeepfakeDetectionWebsite = () => {
     </motion.div>
   );
 
-  const renderUpload = () => (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
-    >
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Upload Media for Analysis</h2>
-      <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <input type="file" accept="image/*,video/*" onChange={handleFileUpload} className="hidden" id="fileInput" />
-        <label
-          htmlFor="fileInput"
-          className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-colors"
-        >
-          <Upload size={48} className="text-gray-400 mb-4" />
-          <span className="text-lg font-semibold">Click to upload or drag and drop</span>
-          <span className="text-sm text-gray-500">Supported formats: JPG, PNG, MP4</span>
-        </label>
-        <AnimatePresence>
-          {uploadedFile && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="mt-4">
-              <p className="text-sm font-semibold">File uploaded: {uploadedFile.name}</p>
-              {detectionResult === null ? (
-                <p className="text-sm text-gray-500">Analyzing...</p>
-              ) : (
-                <Alert className={detectionResult === "authentic" ? "bg-green-100" : "bg-red-100"}>
-                  <AlertTitle className="flex items-center">
-                    {detectionResult === "authentic" ? (
-                      <CheckCircle className="mr-2 text-green-500" />
-                    ) : (
-                      <AlertTriangle className="mr-2 text-red-500" />
-                    )}
-                    {detectionResult === "authentic" ? "Authentic Content" : "Deepfake Detected"}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {detectionResult === "authentic"
-                      ? "The uploaded content appears to be authentic."
-                      : "The uploaded content may be a deepfake. Please verify its source."}
-                  </AlertDescription>
-                </Alert>
-              )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </motion.div>
-  );
+  // const renderUpload = () => (
+  //   <motion.div
+  //     initial={{ opacity: 0 }}
+  //     animate={{ opacity: 1 }}
+  //     exit={{ opacity: 0 }}
+  //     className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
+  //   >
+  //     <h2 className="text-3xl font-bold mb-6 text-gray-800">Upload Media for Analysis</h2>
+  //     <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+  //       <input type="file" accept="image/*,video/*" onChange={handleFileUpload} className="hidden" id="fileInput" />
+  //       <label
+  //         htmlFor="fileInput"
+  //         className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 transition-colors"
+  //       >
+  //         <Upload size={48} className="text-gray-400 mb-4" />
+  //         <span className="text-lg font-semibold">Click to upload or drag and drop</span>
+  //         <span className="text-sm text-gray-500">Supported formats: JPG, PNG, MP4</span>
+  //       </label>
+  //       <AnimatePresence>
+  //         {uploadedFile && (
+  //           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="mt-4">
+  //             <p className="text-sm font-semibold">File uploaded: {uploadedFile.name}</p>
+  //             {detectionResult === null ? (
+  //               <p className="text-sm text-gray-500">Analyzing...</p>
+  //             ) : (
+  //               <Alert className={detectionResult === "authentic" ? "bg-green-100" : "bg-red-100"}>
+  //                 <AlertTitle className="flex items-center">
+  //                   {detectionResult === "authentic" ? (
+  //                     <CheckCircle className="mr-2 text-green-500" />
+  //                   ) : (
+  //                     <AlertTriangle className="mr-2 text-red-500" />
+  //                   )}
+  //                   {detectionResult === "authentic" ? "Authentic Content" : "Deepfake Detected"}
+  //                 </AlertTitle>
+  //                 <AlertDescription>
+  //                   {detectionResult === "authentic"
+  //                     ? "The uploaded content appears to be authentic."
+  //                     : "The uploaded content may be a deepfake. Please verify its source."}
+  //                 </AlertDescription>
+  //               </Alert>
+  //             )}
+  //           </motion.div>
+  //         )}
+  //       </AnimatePresence>
+  //     </motion.div>
+  //   </motion.div>
+  // );
 
-  const renderAnalysis = () => (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
-    >
-      <h2 className="text-3xl font-bold mb-6 text-gray-800">Deepfake Detection Analysis</h2>
-      {analysisData ? (
-        <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Detection Confidence</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold text-center text-gray-800">
-                {analysisData.confidence.toFixed(2)}%
-              </div>
-              <div className="text-center mt-2 text-gray-600">Detected Type: {analysisData.type}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Authenticity Over Time</CardTitle>
-            </CardHeader>
-            <CardContent className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={analysisData.timeSeriesData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="time" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="authenticity" stroke="#8884d8" />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Impact Analysis</CardTitle>
-            </CardHeader>
-            <CardContent className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={analysisData.impactData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} fill="#82ca9d" label>
-                    {analysisData.impactData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </div>
-      ) : (
-        <p className="text-gray-600">No analysis available.</p>
-      )}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="mt-8 bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-200"
-        onClick={() => setActiveSection("home")}
-      >
-        Return to Home
-      </motion.button>
-    </motion.div>
-  );
+  // const renderAnalysis = () => (
+  //   <motion.div
+  //     initial={{ opacity: 0 }}
+  //     animate={{ opacity: 1 }}
+  //     exit={{ opacity: 0 }}
+  //     className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
+  //   >
+  //     <h2 className="text-3xl font-bold mb-6 text-gray-800">Deepfake Detection Analysis</h2>
+  //     {analysisData ? (
+  //       <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-6">
+  //         <Card>
+  //           <CardHeader>
+  //             <CardTitle>Detection Confidence</CardTitle>
+  //           </CardHeader>
+  //           <CardContent>
+  //             <div className="text-4xl font-bold text-center text-gray-800">
+  //               {analysisData.confidence.toFixed(2)}%
+  //             </div>
+  //             <div className="text-center mt-2 text-gray-600">Detected Type: {analysisData.type}</div>
+  //           </CardContent>
+  //         </Card>
+  //         <Card>
+  //           <CardHeader>
+  //             <CardTitle>Authenticity Over Time</CardTitle>
+  //           </CardHeader>
+  //           <CardContent className="h-64">
+  //             <ResponsiveContainer width="100%" height="100%">
+  //               <LineChart data={analysisData.timeSeriesData}>
+  //                 <CartesianGrid strokeDasharray="3 3" />
+  //                 <XAxis dataKey="time" />
+  //                 <YAxis />
+  //                 <Tooltip />
+  //                 <Legend />
+  //                 <Line type="monotone" dataKey="authenticity" stroke="#8884d8" />
+  //               </LineChart>
+  //             </ResponsiveContainer>
+  //           </CardContent>
+  //         </Card>
+  //         <Card>
+  //           <CardHeader>
+  //             <CardTitle>Impact Analysis</CardTitle>
+  //           </CardHeader>
+  //           <CardContent className="h-64">
+  //             <ResponsiveContainer width="100%" height="100%">
+  //               <PieChart>
+  //                 <Pie data={analysisData.impactData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={60} fill="#82ca9d" label>
+  //                   {analysisData.impactData.map((entry, index) => (
+  //                     <Cell key={`cell-${index}`} fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`} />
+  //                   ))}
+  //                 </Pie>
+  //               </PieChart>
+  //             </ResponsiveContainer>
+  //           </CardContent>
+  //         </Card>
+  //       </div>
+  //     ) : (
+  //       <p className="text-gray-600">No analysis available.</p>
+  //     )}
+  //     <motion.button
+  //       whileHover={{ scale: 1.05 }}
+  //       whileTap={{ scale: 0.95 }}
+  //       className="mt-8 bg-blue-600 text-white px-6 py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-200"
+  //       onClick={() => setActiveSection("home")}
+  //     >
+  //       Return to Home
+  //     </motion.button>
+  //   </motion.div>
+  // );
 
   const renderFeedback = () => (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
@@ -273,7 +275,7 @@ const DeepfakeDetectionWebsite = () => {
               <span className="ml-2 text-xl font-bold text-gray-800 dark:text-white">DeepGuard</span>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {["home", "upload", "analysis", "contact", "Dashboard", "Media Analysis", "Model Monitoring"].map(
+              {["Problem Statement", "upload", "Dashboard", "Media Analysis", "Model Monitoring"].map(
                 (section) => (
                   <motion.button
                     key={section}
@@ -339,10 +341,11 @@ const DeepfakeDetectionWebsite = () => {
           exit={{ opacity: 0 }}
           className="flex-grow"
         >
-          {activeSection === "home" && renderHome()}
-          {activeSection === "upload" && renderUpload()}
-          {activeSection === "analysis" && renderAnalysis()}
-          {activeSection === "contact" && <ContactForm />}
+          {/* {activeSection === "home" && renderHome()} */}
+          {activeSection === "Problem Statement" && <ProblemStatementPage />}
+          {activeSection === "upload" && <UploadAndAnalysis />}
+          {/* {activeSection === "analysis" && renderAnalysis()} */}
+          {/* {activeSection === "contact" && <ContactForm />} */}
           {activeSection === "Dashboard" && <DeepfakeDetectionDashboard />}
           {activeSection === "Media Analysis" && <AIMediaAnalysisFeatures />}
           {activeSection === "Model Monitoring" && <DeepfakeMonitorDashboard />}

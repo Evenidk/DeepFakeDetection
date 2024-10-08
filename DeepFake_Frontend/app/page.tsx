@@ -5,14 +5,15 @@ import ReactDOM from "react-dom";
 import { Switch } from "@/components/ui/switch";
 import DeepGuardDashboard from "./dashui";
 import DeepfakeMonitorDashboard from "./monitor";
-import ProblemStatementPage from "./problemstatement";
+import AiTrendsGraph from "@/components/AiTrendsGraph";
+import TrendChart from "@/components/TrendChart";
+
 export default function Home() {
   return (
     <>
     
       <DeepfakeDetectionWebsite />
-   
-     <ProblemStatementPage/>
+
      
   
       <footer className="bg-gray-800 text-white text-center py-4">

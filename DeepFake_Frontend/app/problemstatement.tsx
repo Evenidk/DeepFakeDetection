@@ -1,221 +1,117 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { LucideShieldCheck, LucideAlertTriangle, LucideBarChart4, LucideDollarSign , AlertCircle} from 'lucide-react'
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { LucideAlertTriangle, LucideBarChart4, LucideShieldCheck, LucideDollarSign, AlertCircle } from 'lucide-react';
+import RealTimeChart from '@/components/RealTimeChart';
+import TrendChart from '@/components/TrendChart';
 
 const ProblemStatementPage = () => {
-  const [fraudStats, setFraudStats] = useState(null);
-  const [detectionRate, setDetectionRate] = useState(0);
-
-  useEffect(() => {
-    const fetchData = () => {
-      // Simulating real-time data fetching
-      const newStats = {
-        preventedLosses: Math.floor(Math.random() * 10000000),
-        fraudTypeBreakdown: [
-          { name: 'Voice Deepfake', value: Math.random() * 40 },
-          { name: 'Video Impersonation', value: Math.random() * 30 },
-          { name: 'Synthetic ID', value: Math.random() * 20 },
-          { name: 'Other', value: Math.random() * 10 }
-        ],
-        weeklyAttempts: Array.from({ length: 7 }, (_, i) => ({
-          day: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][i],
-          attempts: Math.floor(Math.random() * 100)
-        })),
-        channelVulnerability: [
-          { channel: 'Online Banking', risk: Math.random() * 20 + 60 },
-          { channel: 'Mobile App', risk: Math.random() * 20 + 40 },
-          { channel: 'Phone Banking', risk: Math.random() * 20 + 70 },
-          { channel: 'In-Person', risk: Math.random() * 20 + 20 }
-        ]
-      };
-      setFraudStats(newStats);
-      setDetectionRate(prev => (prev + Math.random() * 5) % 100);
-    };
-
-    fetchData();
-    const interval = setInterval(fetchData, 5000); // Update every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  if (!fraudStats) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-4xl font-bold mb-8 text-center">DeepGuard: Protecting Financial Institutions from Deepfake Fraud</h1>
+    <div className="p-8 max-w-6xl mx-auto space-y-20">
+      
+      {/* Hero Section */}
+      <section className="mb-20 text-center">
+        {/* <img src="/deepfake.png" alt="Deepfake Illustration" className="w-full h-auto rounded-lg shadow-lg mb-12" /> */}
+        <h1 className="text-6xl font-extrabold text-gray-800 mb-6">DeepGuard: Protecting Against Deepfake Fraud</h1>
+        <p className="text-2xl text-gray-600">Advanced security solutions for the digital age.</p>
+      </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">The Deepfake Threat in Banking</h2>
-        <Card className="mb-4">
-          <CardHeader>
-            <CardTitle>Real-Time Fraud Prevention Meter</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Progress value={detectionRate} className="w-full h-4 mb-2" />
-            <p className="text-center">Current Deepfake Detection Rate: {detectionRate.toFixed(2)}%</p>
-          </CardContent>
-        </Card>
-        <p className="mb-4">
-          Deepfakes pose a significant threat to the banking sector, enabling sophisticated fraud attempts 
-          that can bypass traditional security measures. These AI-generated synthetic media can be used for 
-          identity theft, account takeover, and social engineering attacks, putting both financial institutions 
-          and their customers at risk.
+      {/* About Deepfake Section */}
+      <section className="bg-gray-100 p-10 rounded-lg shadow-lg">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">About Deepfake Technology</h2>
+        <p className="text-xl text-gray-600 leading-relaxed">
+          Deepfake technology uses artificial intelligence to generate highly realistic media that can simulate people’s appearances, voices, and behaviors. 
+          While this technology has positive uses in entertainment and content creation, it also poses significant risks, such as enabling fraud and deception in critical sectors like finance.
         </p>
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Critical Security Alert</AlertTitle>
-          <AlertDescription>
-            Deepfake-enabled fraud attempts are on the rise. Protect your institution with DeepGuard.
+      </section>
+
+      {/* Real-Time Deepfake Trends */}
+      <section className="space-y-16">
+        <div className="bg-white p-10 rounded-lg shadow-md">
+          <h1 className="text-4xl font-bold text-gray-800 mb-6">Deepfake Detection Trends</h1>
+          <p className="text-xl text-gray-600 mb-8">Real-time trends from public APIs (NewsAPI and Shodan)</p>
+          <div className="p-6 bg-gray-50 rounded-lg shadow-inner">
+            <RealTimeChart />
+          </div>
+        </div>
+
+        <div className="bg-white p-10 rounded-lg shadow-md">
+          <h1 className="text-4xl font-bold text-gray-800 mb-6">AI Trends Dashboard</h1>
+          <div className="p-6 bg-gray-50 rounded-lg shadow-inner">
+            <TrendChart />
+          </div>
+        </div>
+      </section>
+
+      {/* Problem Statement Section */}
+      <section className="bg-gray-50 p-10 rounded-lg shadow-lg">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">Problem Statement</h2>
+        <p className="text-xl text-gray-600 leading-relaxed mb-8">
+          Deepfakes present a growing threat in industries that rely on trust and authenticity, such as finance, media, and cybersecurity. 
+          By manipulating voices, faces, and even entire videos, malicious actors can use deepfakes to steal identities, commit fraud, or deceive individuals and organizations on an unprecedented scale.
+        </p>
+        <Alert className="border-l-4 border-red-500 bg-red-50 text-red-900">
+          <AlertCircle className="h-8 w-8 text-red-500" />
+          <AlertTitle className="text-2xl font-semibold">Security Threat</AlertTitle>
+          <AlertDescription className="text-xl">
+            Deepfake attacks can lead to massive financial losses and erode trust in security systems. Financial institutions must be equipped with state-of-the-art defenses.
           </AlertDescription>
         </Alert>
       </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">DeepGuard: Your Financial Firewall</h2>
-        <p className="mb-4">
-          DeepGuard is a cutting-edge solution designed to protect financial institutions from deepfake-enabled fraud. 
-          By leveraging advanced AI and multi-factor authentication, we provide robust, real-time detection across all digital channels.
+      {/* Solution Section */}
+      <section className="bg-white p-10 rounded-lg shadow-lg">
+        <h2 className="text-4xl font-bold text-gray-800 mb-8">Our Solution: DeepGuard</h2>
+        <p className="text-xl text-gray-600 mb-10">
+          DeepGuard is a comprehensive defense solution against deepfake fraud. 
+          By leveraging cutting-edge AI technologies and integrating them into real-time authentication processes, DeepGuard offers multi-channel protection across all digital platforms.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          
+          <Card className="hover:shadow-xl transition-shadow">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <LucideShieldCheck className="mr-2" /> Multi-Channel Protection
+              <CardTitle className="flex items-center text-xl font-semibold">
+                <LucideShieldCheck className="mr-3 text-green-600" /> Multi-Channel Protection
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p>Secures online banking, mobile apps, phone banking, and in-person transactions against deepfake attempts.</p>
+            <CardContent className="text-gray-600 text-lg">
+              DeepGuard safeguards online banking, mobile apps, phone banking, and in-person transactions from deepfake attacks.
             </CardContent>
           </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <LucideAlertTriangle className="mr-2" /> Real-Time Alerts
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Instant notifications for suspicious activities, allowing immediate response to potential threats.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <LucideBarChart4 className="mr-2" /> Fraud Analytics
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Comprehensive dashboards and reports for tracking fraud patterns and improving security measures.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <LucideDollarSign className="mr-2" /> Loss Prevention
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Significantly reduce financial losses due to deepfake-enabled fraud attempts.</p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Fraud Prevention Metrics</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <Card>
+          <Card className="hover:shadow-xl transition-shadow">
             <CardHeader>
-              <CardTitle>Prevented Losses</CardTitle>
+              <CardTitle className="flex items-center text-xl font-semibold">
+                <LucideAlertTriangle className="mr-3 text-yellow-600" /> Real-Time Alerts
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-4xl font-bold text-center mb-2">${fraudStats.preventedLosses.toLocaleString()}</div>
-              <p className="text-center text-sm text-muted-foreground">Potential losses prevented in the last 24 hours</p>
+            <CardContent className="text-gray-600 text-lg">
+              Immediate alerts for suspicious activity enable rapid response to potential threats, minimizing the damage caused by deepfake attacks.
             </CardContent>
           </Card>
-          <Card>
+
+          <Card className="hover:shadow-xl transition-shadow">
             <CardHeader>
-              <CardTitle>Fraud Type Breakdown</CardTitle>
+              <CardTitle className="flex items-center text-xl font-semibold">
+                <LucideBarChart4 className="mr-3 text-blue-600" /> Advanced Fraud Analytics
+              </CardTitle>
             </CardHeader>
-            <CardContent className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={fraudStats.fraudTypeBreakdown}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {fraudStats.fraudTypeBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+            <CardContent className="text-gray-600 text-lg">
+              Real-time analytics provide in-depth insights into fraud trends, enabling better strategies and defense mechanisms.
             </CardContent>
           </Card>
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Weekly Fraud Attempts</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={fraudStats.weeklyAttempts}>
-                <XAxis dataKey="day" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="attempts" stroke="#8884d8" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </section>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Channel Vulnerability Assessment</h2>
-        <Card>
-          <CardHeader>
-            <CardTitle>Deepfake Risk by Banking Channel</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={fraudStats.channelVulnerability}>
-                <XAxis dataKey="channel" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="risk" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </section>
-
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">Why Choose DeepGuard for Your Financial Institution</h2>
-        <p className="mb-4">
-          DeepGuard is tailored to meet the unique security challenges faced by banks and financial services. 
-          Our solution integrates seamlessly with existing security infrastructure, providing an additional 
-          layer of protection against the most sophisticated deepfake fraud attempts.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <Badge>AI-Powered Detection</Badge>
-          <Badge>Regulatory Compliance</Badge>
-          <Badge>Customer Trust</Badge>
-          <Badge>Fraud Prevention</Badge>
-          <Badge>Multi-Factor Authentication</Badge>
+          <Card className="hover:shadow-xl transition-shadow">
+            <CardHeader>
+              <CardTitle className="flex items-center text-xl font-semibold">
+                <LucideDollarSign className="mr-3 text-green-600" /> Financial Loss Prevention
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-gray-600 text-lg">
+              DeepGuard helps financial institutions prevent significant financial losses by detecting and stopping deepfake attacks in real time.
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>
