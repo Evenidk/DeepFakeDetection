@@ -4,7 +4,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Switch } from "@/components/ui/switch";
 import DeepGuardDashboard from "./dashui";
-import DeepfakeMonitorDashboard from "./monitor";
 import AiTrendsGraph from "@/components/AiTrendsGraph";
 import TrendChart from "@/components/TrendChart";
 

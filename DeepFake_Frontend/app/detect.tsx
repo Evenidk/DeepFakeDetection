@@ -40,7 +40,7 @@ import UploadAndAnalysis from "./UploadAndAnalysis";
 import ProblemStatementPage from "./problemstatement";
 
 const DeepfakeDetectionWebsite = () => {
-  const [activeSection, setActiveSection] = useState("Problem Statement");
+  const [activeSection, setActiveSection] = useState("home");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [detectionResult, setDetectionResult] = useState<"authentic" | "deepfake" | null>(null);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
@@ -275,7 +275,7 @@ const DeepfakeDetectionWebsite = () => {
               <span className="ml-2 text-xl font-bold text-gray-800 dark:text-white">DeepGuard</span>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              {["Problem Statement", "upload", "Dashboard", "Media Analysis", "Model Monitoring"].map(
+              {["home","Problem Statement", "upload", "Dashboard", "Media Analysis", "Model Monitoring"].map(
                 (section) => (
                   <motion.button
                     key={section}
@@ -341,7 +341,7 @@ const DeepfakeDetectionWebsite = () => {
           exit={{ opacity: 0 }}
           className="flex-grow"
         >
-          {/* {activeSection === "home" && renderHome()} */}
+          {activeSection === "home" && renderHome()}
           {activeSection === "Problem Statement" && <ProblemStatementPage />}
           {activeSection === "upload" && <UploadAndAnalysis />}
           {/* {activeSection === "analysis" && renderAnalysis()} */}
