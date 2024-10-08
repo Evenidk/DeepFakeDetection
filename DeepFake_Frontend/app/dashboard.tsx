@@ -1,18 +1,13 @@
 "use client";
 import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Upload, FileVideo, FileImage, FileAudio, FileText } from 'lucide-react';
 
-const fakeData = [
-  { name: 'Jan', video: 400, audio: 240, image: 320, text: 180 },
-  { name: 'Feb', video: 300, audio: 139, image: 220, text: 250 },
-  { name: 'Mar', video: 200, audio: 980, image: 290, text: 190 },
-  // ...
-];
+// Import the RealTimeChart component
+import RealTimeChart from "../components/RealTimeChart"; 
 
 const DeepfakeDetectionDashboard = () => {
   const [activeTab, setActiveTab] = useState<string>('video');
@@ -102,23 +97,11 @@ const DeepfakeDetectionDashboard = () => {
       <Card className="mb-6">
         <CardHeader>
           <CardTitle className="text-2xl">Deepfake Detection Trends</CardTitle>
-          <CardDescription>Monthly detection rates across different media types</CardDescription>
+          <CardDescription>Real-time trends from public APIs (NewsAPI and Shodan)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={fakeData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="video" stroke="#8884d8" />
-                <Line type="monotone" dataKey="audio" stroke="#82ca9d" />
-                <Line type="monotone" dataKey="image" stroke="#ffc658" />
-                <Line type="monotone" dataKey="text" stroke="#ff7300" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          {/* Replace the fake data chart with the RealTimeChart component */}
+          <RealTimeChart />
         </CardContent>
       </Card>
 
